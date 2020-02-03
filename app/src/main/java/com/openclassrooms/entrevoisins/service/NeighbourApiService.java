@@ -21,4 +21,6 @@ public interface NeighbourApiService {
      * @param neighbour
      */
     void deleteNeighbour(Neighbour neighbour);
+
+    Neighbour getNeighbourByID (Integer id);
 }
