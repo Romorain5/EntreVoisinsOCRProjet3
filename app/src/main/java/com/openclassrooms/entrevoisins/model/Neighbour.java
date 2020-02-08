@@ -52,6 +52,8 @@ public class Neighbour {
         this.avatarUrl = avatarUrl;
     }
 
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

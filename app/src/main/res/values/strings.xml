@@ -3,4 +3,8 @@
     <string name="tab_neighbour_title">My neighbours</string>
     <string name="tab_favorites_title">Favorites</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="description">Bonjour ! He souhaiterais faire de la marche nordique. Pas initiée, je recherche une ou plusieurs personne susceptible de m\'accompagner :) J\'aime les jeux de cartes tels que la belote et le poker.</string>
+    <string name="location">Saint pierre du mont à 5km</string>
+    <string name="phone_number">+33 6 19 61 39 43</string>
+    <string name="about_me">À propos de moi</string>
 </resources>

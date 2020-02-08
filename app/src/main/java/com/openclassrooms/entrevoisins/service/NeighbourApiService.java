@@ -5,6 +5,7 @@ import com.openclassrooms.entrevoisins.model.Neighbour;
 import java.util.List;
 
 
+//
 /**
  * Neighbour API client
  */
@@ -23,4 +24,6 @@ public interface NeighbourApiService {
     void deleteNeighbour(Neighbour neighbour);
 
     Neighbour getNeighbourByID (Integer id);
+
+
 }

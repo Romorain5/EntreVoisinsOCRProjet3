@@ -21,8 +21,8 @@ import java.util.List;
 public class NeighbourDetailsActivity extends AppCompatActivity {
 
     public static String NEIGHBOUR_ID = "arg_id_neighbour";
-    public static String NEIGHBOUR_SAVED_TEXT = "L'utilisateur a bien été enregistré dans les favoris";
-    public static String NEIGHBOUR_DELETED_TEXT = "L'utilisateur a bien été supprimé des favoris";
+    public static String NEIGHBOUR_SAVED_TEXT = "L'utilisateur a été enregistré dans les favoris";
+    public static String NEIGHBOUR_DELETED_TEXT = "L'utilisateur a été supprimé des favoris";
 
 
     private String facebookUrl = "www.facebook.fr/";

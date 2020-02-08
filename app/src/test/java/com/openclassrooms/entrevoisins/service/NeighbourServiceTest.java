@@ -40,4 +40,12 @@ public class NeighbourServiceTest {
         service.deleteNeighbour(neighbourToDelete);
         assertFalse(service.getNeighbours().contains(neighbourToDelete));
     }
+
+   // @Test
+   // public void getFavNeighboursWithSuccess() {
+   //     List<Neighbour> expectedNeighbours = DummyNeighbourGenerator.DUMMY_NEIGHBOURS;
+   //     Neighbour expectedToBeFav = service.getNeighbourByID(1);
+   //     expectedToBeFav.set
+   //
+   // }
 }
