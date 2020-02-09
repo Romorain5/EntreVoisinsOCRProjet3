@@ -59,12 +59,9 @@ public class MyNeighbourRecyclerViewAdapter extends RecyclerView.Adapter<MyNeigh
         if (mIsFav) {
             holder.mDeleteButton.setVisibility(View.GONE);
         } else {
-            holder.mDeleteButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    EventBus.getDefault().post(new DeleteNeighbourEvent(neighbour));
-                    EventBus.getDefault().post(new DeleteFavoriteNeighbourEvent(neighbour));
-                }
+            holder.mDeleteButton.setOnClickListener(v -> {
+                EventBus.getDefault().post(new DeleteNeighbourEvent(neighbour));
+                EventBus.getDefault().post(new DeleteFavoriteNeighbourEvent(neighbour));
             });
         }
 
@@ -85,7 +82,7 @@ public class MyNeighbourRecyclerViewAdapter extends RecyclerView.Adapter<MyNeigh
         @BindView(R.id.item_list_delete_button)
         public ImageButton mDeleteButton;
 
-        public ViewHolder(View view) {
+        ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
         }

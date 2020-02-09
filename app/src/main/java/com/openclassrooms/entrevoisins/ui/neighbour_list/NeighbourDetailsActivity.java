@@ -18,19 +18,32 @@ import com.openclassrooms.entrevoisins.service.NeighbourApiService;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class NeighbourDetailsActivity extends AppCompatActivity {
 
     public static String NEIGHBOUR_ID = "arg_id_neighbour";
     public static String NEIGHBOUR_SAVED_TEXT = "L'utilisateur a été enregistré dans les favoris";
     public static String NEIGHBOUR_DELETED_TEXT = "L'utilisateur a été supprimé des favoris";
 
+    @BindView(R.id.neighbour_image)
+    AppCompatImageView neighbourImage;
+    @BindView(R.id.neighbour_name)
+    AppCompatTextView neighbourName;
+    @BindView(R.id.cardview_name)
+    AppCompatTextView cardViewName;
+    @BindView(R.id.item_cardview_link_facebook)
+    AppCompatTextView facebookLink;
+    @BindView(R.id.image_favorite)
+    AppCompatImageView favoriteButton;
+    @BindView(R.id.backButton)
+    AppCompatImageView backButton;
 
-    private String facebookUrl = "www.facebook.fr/";
-    private NeighbourApiService mApiservice;
+
     private Neighbour mNeighbour;
-    public static String NEIGHBOUR_PREF = "neighbourSharedPreferences";
-    FavoritesManager manager;
-
+    public static String PREF_NEIGHBOURS = "neighbourSharedPreferences";
+    FavManager manager;
     List<Neighbour> mNeighboursSaved;
 
     @Override
@@ -38,18 +51,18 @@ public class NeighbourDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_neighbour_details);
         Intent intent = getIntent();
+        ButterKnife.bind(this);
         //récupere l'id du voisin cliqué
         Integer neighbourId = intent.getIntExtra(NEIGHBOUR_ID, 0);
-        mApiservice = DI.getNeighbourApiService();
+        NeighbourApiService mApiservice = DI.getNeighbourApiService();
         // récupere le voisin en renseignant l'id à l'API
         mNeighbour = mApiservice.getNeighbourByID(neighbourId);
 
-        // if user click on favorite button, we already have all favorites users to compare
-        manager = new FavoritesManager(this);
-        mNeighboursSaved = manager.getFavoritesNeighbour();
+        manager = new FavManager(this);
+        mNeighboursSaved = manager.getFromFav();
 
         if (mNeighbour != null) {
-            bindNeighbourDetail();
+            applyDetails();
         } else {
             this.finish();
         }
@@ -60,26 +73,20 @@ public class NeighbourDetailsActivity extends AppCompatActivity {
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
     }
 
-    private void bindNeighbourDetail() {
-        AppCompatImageView imageNeighbour = findViewById(R.id.item_image_neighbour);
-        AppCompatTextView nameNeighbour = findViewById(R.id.item_name_neighbour);
-        AppCompatTextView cardViewNameNeighbour = findViewById(R.id.cardview_name);
-        AppCompatTextView facebookLinkNeighbour = findViewById(R.id.item_cardview_link_facebook);
-        AppCompatImageView favoriteButton = findViewById(R.id.image_favorite);
-        AppCompatImageView backButton = findViewById(R.id.item_backButton);
+    private void applyDetails() {
 
+
+        String facebookUrl = "www.facebook.fr/";
         String url = facebookUrl + mNeighbour.getName().toLowerCase();
 
-        nameNeighbour.setText(mNeighbour.getName());
-        cardViewNameNeighbour.setText(mNeighbour.getName());
-        facebookLinkNeighbour.setText(url);
-        Glide.with(imageNeighbour.getContext())
+        neighbourName.setText(mNeighbour.getName());
+        cardViewName.setText(mNeighbour.getName());
+        facebookLink.setText(url);
+        Glide.with(neighbourImage.getContext())
                 .load(mNeighbour.getAvatarUrl())
                 .apply(RequestOptions.centerCropTransform())
-                .into(imageNeighbour);
-        backButton.setOnClickListener(view -> {
-            this.finish();
-        });
+                .into(neighbourImage);
+        backButton.setOnClickListener(view -> this.finish());
 
         if (mNeighboursSaved.contains(mNeighbour)) {
             favoriteButton.setImageResource(R.drawable.ic_star_24dp);
@@ -92,12 +99,12 @@ public class NeighbourDetailsActivity extends AppCompatActivity {
 
             manager.saveNeighbour(mNeighbour);
 
-            if (manager.getFavoritesNeighbour().contains(mNeighbour)) {
+            if (manager.getFromFav().contains(mNeighbour)) {
                 makeToast(NEIGHBOUR_SAVED_TEXT);
                 favoriteButton.setImageResource(R.drawable.ic_star_24dp);
             } else {
-                makeToast(NEIGHBOUR_DELETED_TEXT);
                 favoriteButton.setImageResource(R.drawable.ic_star_border_yellow_24dp);
+                makeToast(NEIGHBOUR_DELETED_TEXT);
             }
         });
     }

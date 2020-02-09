@@ -29,7 +29,7 @@ public class FavFragment extends Fragment {
 
     private List<Neighbour> mFavorites;
     private RecyclerView mRecyclerView;
-    FavoritesManager manager;
+    FavManager manager;
 
     public static FavFragment newInstance() {
         FavFragment fragment = new FavFragment();
@@ -39,7 +39,7 @@ public class FavFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        manager = new FavoritesManager(getContext());
+        manager = new FavManager(getContext());
     }
 
 
@@ -74,7 +74,7 @@ public class FavFragment extends Fragment {
     }
 
     private void initList() {
-        List<Neighbour> favoritesSaved = manager.getFavoritesNeighbour();
+        List<Neighbour> favoritesSaved = manager.getFromFav();
 
         if (favoritesSaved != null) {
             mFavorites = favoritesSaved;
@@ -91,7 +91,7 @@ public class FavFragment extends Fragment {
      */
     @Subscribe
     public void onDeleteFavoriteNeighbour(DeleteFavoriteNeighbourEvent event) {
-        manager.deleteFavoriteNeighbour(event.neighbour);
+        manager.removeFromFav(event.neighbour);
         initList();
     }
 }
