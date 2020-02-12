@@ -39,7 +39,6 @@ public class FavManager {
 
     public List<Neighbour> getFromFav() {
         Type type = new TypeToken<List<Neighbour>>(){}.getType(); // permet de pouvoir renseigner à JSON une Liste de Neighbour ( car pas possible de dire
-        // <List<Neighbour>>.class
         String neighboursSavedString = mSharedPreferences.getString(PREF_NEIGHBOURS, "");
         List<Neighbour> emptyArray = new ArrayList<>();
 

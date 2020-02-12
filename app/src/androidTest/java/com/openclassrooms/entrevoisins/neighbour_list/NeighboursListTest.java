@@ -7,8 +7,11 @@ import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.v7.widget.RecyclerView;
+import android.widget.TextView;
 
 import com.openclassrooms.entrevoisins.R;
+import com.openclassrooms.entrevoisins.di.DI;
+import com.openclassrooms.entrevoisins.service.NeighbourApiService;
 import com.openclassrooms.entrevoisins.ui.neighbour_list.ListNeighbourActivity;
 import com.openclassrooms.entrevoisins.utils.DeleteViewAction;
 
@@ -21,9 +24,11 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
+import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static android.support.test.espresso.matcher.ViewMatchers.hasMinimumChildCount;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static com.openclassrooms.entrevoisins.utils.RecyclerViewItemCountAssertion.withItemCount;
 import static org.hamcrest.core.IsNull.notNullValue;
 
@@ -37,6 +42,7 @@ public class NeighboursListTest {
 
     // This is fixed
     private static int ITEMS_COUNT = 12;
+    private NeighbourApiService service;
 
 
 
@@ -48,6 +54,7 @@ public class NeighboursListTest {
 
     @Before
     public void setUp() {
+        service = DI.getNewInstanceApiService();
         mActivity = mActivityRule.getActivity();
         assertThat(mActivity, notNullValue());
     }
@@ -89,18 +96,21 @@ public class NeighboursListTest {
     @Test
     public void onDetailView_userNameIsNotEmpty() {
         onView(ViewMatchers.withId(R.id.list_neighbours)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
-        onView(ViewMatchers.withId(R.id.neighbour_name)).check(matches(notNullValue()));
+        onView(ViewMatchers.withId(R.id.neighbour_name)).check(matches(withText(service.getNeighbourByID(1).getName())));
     }
 
     @Test
     public void favoriteViewOnlyDisplayFavNeighbours()  {
         RecyclerView list_neighbours_favorites = mActivityRule.getActivity().findViewById(R.id.list_neighbours_favorites);
+        // check the number of favs at start
+        int favCount = list_neighbours_favorites.getAdapter().getItemCount();
 
         int favCountBeforeClick = 0;
         int favCountAfterClick = 0;
+        boolean justAddedANewFav = false;
         int i = 0;
-        // Clique sur un voisin, clique sur le bouton fav, la condition verifie si on viens de l'ajouter ou de l'enlever des favoris
-        while (i != ITEMS_COUNT) {
+        // Clique sur un voisin, et sur le bouton favori, on arrête la boucle quand on viens d'ajouter quelqu'un en fav
+        while (!justAddedANewFav) {
             favCountBeforeClick = list_neighbours_favorites.getAdapter().getItemCount();
             onView(ViewMatchers.withId(R.id.list_neighbours)).perform(RecyclerViewActions.actionOnItemAtPosition(i, click()));
             onView(ViewMatchers.withId(R.id.image_favorite)).perform(click());
@@ -108,13 +118,14 @@ public class NeighboursListTest {
             favCountAfterClick = list_neighbours_favorites.getAdapter().getItemCount();
             onView(ViewMatchers.withId(R.id.list_neighbours_favorites)).check(withItemCount(favCountAfterClick));
 
-            if (favCountBeforeClick > favCountAfterClick) {
-                // si on viens d'enlever un fav on doit avoir favCountBeforeClick -1 sinon l'inverse
-                onView(ViewMatchers.withId(R.id.list_neighbours_favorites)).check(withItemCount(favCountBeforeClick - 1));
-            } else {
+            if (favCountBeforeClick < favCountAfterClick) {
+                // si on viens d'ajouter un fav on doit avoir favCountBeforeClick +1 sinon l'inverse
+                // verifie le bon nombre de favori aprés en avoir ajouté un
                 onView(ViewMatchers.withId(R.id.list_neighbours_favorites)).check(withItemCount(favCountBeforeClick + 1));
+                justAddedANewFav = true;
             }
             i++;
+
         }
 
     }

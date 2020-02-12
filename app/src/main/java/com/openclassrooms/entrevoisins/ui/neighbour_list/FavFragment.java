@@ -51,7 +51,7 @@ public class FavFragment extends Fragment {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
         mRecyclerView.addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.VERTICAL));
         initList();
-        Log.d("DEBUG", "onCreateView: fav freg supposed to be displayed");
+
         return view;
     }
 
